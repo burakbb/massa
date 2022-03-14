@@ -14,9 +14,14 @@ use massa_signature::{
     SIGNATURE_SIZE_BYTES,
 };
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::convert::TryInto;
-use std::fmt::Formatter;
+use std::fmt::{Formatter, Debug};
 use std::str::FromStr;
+use std::sync::Mutex;
+use std::sync::atomic::AtomicI64;
+use tracing::debug;
+use std::backtrace::Backtrace;
 
 const BLOCK_ID_STRING_PREFIX: &str = "BLO";
 
@@ -92,7 +97,32 @@ impl BlockId {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+use lazy_static::lazy_static; // 1.4.0
+
+lazy_static! {
+    static ref CLONE_COUNT: AtomicI64 = AtomicI64::new(0);
+    static ref BACKTRACES: Mutex<HashMap<String, u32>> = {
+        Mutex::new(HashMap::new())
+    };
+}
+
+impl Clone for Block {
+    fn clone(&self) -> Self {
+        let traces: Vec<String> = Backtrace::force_capture().frames()[1..7].iter().map(|f| format!("{:#?}\n", f)).collect();
+        let trace = traces.join(",");
+        let mut lock = BACKTRACES.lock().unwrap();
+        let entry = lock.entry(trace).or_insert(0);
+        *entry += 1;
+        debug!("Backtraces = {:?}", lock);
+        debug!("Clone block count = {}", CLONE_COUNT.fetch_add(1, std::sync::atomic::Ordering::SeqCst) + 1);
+        Self {
+            header: self.header.clone(),
+            operations: self.operations.clone()
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Block {
     pub header: BlockHeader,
     pub operations: Vec<Operation>,
