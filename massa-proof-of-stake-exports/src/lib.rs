@@ -1,5 +1,6 @@
 // Copyright (c) 2022 MASSA LABS <info@massa.net>
 #![feature(int_roundings)]
+#![warn(unused_crate_dependencies)]
 
 pub mod error;
 mod export_pos;

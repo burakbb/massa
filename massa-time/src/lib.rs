@@ -1,5 +1,7 @@
 // Copyright (c) 2022 MASSA LABS <info@massa.net>
 
+#![warn(unused_crate_dependencies)]
+
 mod error;
 pub use error::TimeError;
 use serde::{Deserialize, Serialize};

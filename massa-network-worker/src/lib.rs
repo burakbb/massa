@@ -3,7 +3,7 @@
 #![feature(async_closure)]
 #![feature(drain_filter)]
 #![feature(ip)]
-
+#![warn(unused_crate_dependencies)]
 //! Manages a connection with a node
 
 use crate::{

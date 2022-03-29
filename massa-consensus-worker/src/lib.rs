@@ -6,7 +6,7 @@
 #![feature(hash_drain_filter)]
 #![feature(map_first_last)]
 #![feature(int_roundings)]
-
+#![warn(unused_crate_dependencies)]
 #[macro_use]
 extern crate massa_logging;
 

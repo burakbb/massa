@@ -3,6 +3,7 @@
 #![feature(async_closure)]
 #![feature(drain_filter)]
 #![feature(ip)]
+#![warn(unused_crate_dependencies)]
 
 pub mod protocol_worker;
 pub mod worker_operations_impl;

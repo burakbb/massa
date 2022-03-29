@@ -1,5 +1,6 @@
 // Copyright (c) 2022 MASSA LABS <info@massa.net>
 
+#![warn(unused_crate_dependencies)]
 #[macro_use]
 extern crate lazy_static;
 
